@@ -234,14 +234,14 @@ function App() {
                             <div className="card-header msg_head">
                                 <div className="d-flex bd-highlight">
                                     <div className="img_cont">
-                                        <img className="rounded-circle" height="75px" width = "75px" src={`${image}`}/>
+                                        <img className="rounded-circle" height="75px" width = "75px" src={image ? `${image}` : "https://cdn-icons-png.flaticon.com/512/25/25333.png"}/>
     
                                         {/* {users.filter(user => user.tg_id == currentChatId) == [] ? (<img className="rounded-circle" height="75px" width = "75px"/>) : (<img className="rounded-circle" height="75px" width = "75px" src={`${users.filter(user => user.tg_id == currentChatId)[0].image}`}/>)} */}
                                         {/* <img className="rounded-circle" height="75px" width = "75px" src={`${curUser.image}`}/> */}
                                     
                                     </div>
                                     <div className="user_info">
-                                    <span>Chat with {first + " " + last}</span>
+                                    <span>Chat with {first || last ? first + " " + last : "?"}</span>
                                         {/* {users.filter(user => user.tg_id == currentChatId) == [] ? (
                                             <span>Undefined</span>
                                         ) : (<span>Chat with {users.filter(user => user.tg_id == currentChatId)[0].first_name + " " + users.filter(user => user.tg_id == currentChatId)[0].last_name}</span>)} */}
