@@ -1,17 +1,19 @@
 import {React, useState, useEffect} from "react";
-import './App.css'
+import './AllChats.css'
 import axios from 'axios';
 
 let tg = window.Telegram.WebApp; 
 tg.expand();
 
-function App() {
+function AllChats() {
 
     const [chats, setChats] = useState({})
     const [users, setUsers] = useState([])
     const [chatMessages, setChatMessages] = useState([])
+
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUsers, setFilteredUsers] = useState(users);
+
     const [curUser, setCurUser] = useState([])
     const [currentChatId, setCurrentChatId] = useState(0)
 
@@ -24,18 +26,19 @@ function App() {
 
 
     const handleSearch = (e) => {
-      let term = e.target.value;
-      setSearchTerm(term);
-
-      let filtered = [];
-      if(users){
-      // Filter users based on the search term
-        filtered = users.filter(user => (
-          (user.username && user.username.toLowerCase().includes(term.toLowerCase()))
+        const term = e.target.value;
+        setSearchTerm(term);
+    
+        // Filter users based on the search term
+        const filtered = users.filter(user => (
+            user.first_name.toLowerCase().includes(term.toLowerCase()) ||
+            user.last_time.toLowerCase().includes(term.toLowerCase()) ||
+            user.username.toLowerCase().includes(term.toLowerCase())
         ));
-      }
-      setFilteredUsers(filtered);
+    
+        setFilteredUsers(filtered);
     };
+
 
     const [loading, setLoading] = useState(true);
 
@@ -200,7 +203,7 @@ function App() {
                     <div className="col-md-4 col-xl-3 chat"><div className="card mb-sm-3 mb-md-0 contacts_card">
                         <div className="card-header">
                             <div className="input-group">
-                            <input value={searchTerm} onChange={handleSearch} type="text" placeholder="Search by tg username..." name="" className="form-control search"/>
+                                <input value={searchTerm} onChange={handleSearch} type="text" placeholder="Search..." name="" className="form-control search"/>
                                 <div className="input-group-prepend">
                                     <span className="input-group-text search_btn"><i className="fas fa-search"></i></span>
                                 </div>
@@ -283,4 +286,4 @@ function App() {
         )
     }                               
 
-export default App;
+export default AllChats;
