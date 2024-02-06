@@ -142,6 +142,7 @@ function App() {
               console.log('getUsers:', response.data);
               usersarr = response.data;
               setUsers(usersarr);
+              setFilteredUsers(usersarr);
               return response.data;
             } catch (error) {
               console.error('Error:', error);
