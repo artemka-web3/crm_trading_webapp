@@ -44,7 +44,7 @@ function App() {
     }
 
     const sendMessage = async() => {
-        axios.post('http://134.0.118.29/api/send-telegram-message/', {
+        axios.post('http://127.0.0.1:8000/api/send-telegram-message/', {
             chat_id: currentChatId,
             message: inputMsg,
           })
@@ -60,7 +60,7 @@ function App() {
     }
 
     const createChatMessage = async () => {
-        const createMsgReq = 'http://134.0.118.29/api/messages/create/';
+        const createMsgReq = 'http://127.0.0.1:8000/api/messages/create/';
       
         const newMessageData = {
           user: currentChatId,
@@ -135,7 +135,7 @@ function App() {
 
         const getUsers = async () => {
             let usersarr = []
-            const apiUrl = 'http://134.0.118.29/api/users/';
+            const apiUrl = 'http://127.0.0.1:8000/api/users/';
             
             try {
               const response = await axios.get(apiUrl);
@@ -151,7 +151,7 @@ function App() {
           };
 
         const defaultChatMessages = async() => {
-            const apiUrl = `http://134.0.118.29/api/messages/?chat_id=${currentChatId}`;
+            const apiUrl = `http://127.0.0.1:8000/api/messages/?chat_id=${currentChatId}`;
             axios.get(apiUrl)
               .then(response => {
                 console.log('defaultChatMessages', response.data);
