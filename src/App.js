@@ -148,7 +148,7 @@ function App() {
 
         const getUsers = async () => {
             let usersarr = []
-            const apiUrl = 'http://134.0.118.29/api/users/get-users/';
+            const apiUrl = 'http://134.0.118.29/api/users/';
             
             try {
               const response = await axios.get(apiUrl);
