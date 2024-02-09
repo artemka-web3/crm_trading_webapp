@@ -154,7 +154,7 @@ function App() {
               const response = await axios.get(apiUrl);
               const sortedUsers = response.data.sort((a, b) => b.unread_messages_count - a.unread_messages_count);
               usersarr = sortedUsers;
-
+              console.log('sortedUsers', sortedUsers)
               setUsers(usersarr);
               setFilteredUsers(usersarr);
               return response.data;
