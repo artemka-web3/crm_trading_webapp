@@ -122,25 +122,39 @@ function App() {
       
       
 
-    const chooseChat =(e, id)=>{
-        e.preventDefault()
+    
+    const chooseChat = async (e, id) => {
+        e.preventDefault();
         setCurrentChatId(id);
-        const filteredUser = users.filter(user => user.tg_id == `${id}`);
-        console.log(filteredUser)
+    
+        // Set all messages in this chat as read in the frontend
+        const filteredUser = users.filter(user => user.tg_id === `${id}`);
         setCurUser(filteredUser);
-    }
+    
+        // Make an API call to mark messages as read in the backend
+        try {
+            const apiUrl = `http://134.0.118.29/api/messages/mark-as-read/${id}`;
+            await axios.put(apiUrl);
+    
+            
+        } catch (error) {
+            console.error('Error marking messages as read:', error);
+        }
+    };
+    
 
     useEffect(() => {
         
 
         const getUsers = async () => {
             let usersarr = []
-            const apiUrl = 'http://134.0.118.29/api/users/';
+            const apiUrl = 'http://134.0.118.29/api/users/get-users/';
             
             try {
               const response = await axios.get(apiUrl);
-              console.log('getUsers:', response.data);
-              usersarr = response.data;
+              const sortedUsers = response.data.sort((a, b) => b.unread_messages_count - a.unread_messages_count);
+              usersarr = sortedUsers;
+
               setUsers(usersarr);
               setFilteredUsers(usersarr);
               return response.data;
@@ -214,6 +228,7 @@ function App() {
                                         <div className="d-flex bd-highlight">
                                             <div className="img_cont">
                                                 <img className="rounded-circle" height="75px" width = "75px" src={`${user.image}`}/>
+                                                {user.unread_messages_count > 0 ? (<span class="online_icon offline">{user.unread_messages_count}</span>) : ""}
                                             </div>
                                             <div className="user_info">
                                                 <span>{user.first_name + ' ' + user.last_name}</span>
