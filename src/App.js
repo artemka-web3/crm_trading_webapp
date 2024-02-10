@@ -133,7 +133,18 @@ function App() {
     
         // Make an API call to mark messages as read in the backend
         try {
-            const apiUrl = `http://134.0.118.29/api/read_all/?=${id}`;
+            const csrfTokenFromCookie = document.cookie
+            .split('; ')
+            .find(cookie => cookie.startsWith('csrftoken='))
+            .split('=')[1];
+
+            // Set the CSRF token in the axios headers
+            if (csrfTokenFromCookie) {
+            axios.defaults.headers.common['X-CSRFToken'] = csrfTokenFromCookie;
+            } else {
+            console.error('CSRF token not found in the Cookie header.');
+            }
+            const apiUrl = `http://134.0.118.29/api/read_all/?tg_id=${id}`;
             await axios.post(apiUrl);
     
             
@@ -228,7 +239,9 @@ function App() {
                                         <div className="d-flex bd-highlight">
                                             <div className="img_cont">
                                                 <img className="rounded-circle" height="75px" width = "75px" src={`${user.image}`}/>
-                                                {user.unread_messages_count > 0 ? (<span class="online_icon offline">{user.unread_messages_count}</span>) : ""}
+                                                {parseInt(user.unread_messages_count) > 0 && (
+                                                    <div className="unread-messages-badge">{user.unread_messages_count}</div>
+                                                )}
                                             </div>
                                             <div className="user_info">
                                                 <span>{user.first_name + ' ' + user.last_name}</span>
