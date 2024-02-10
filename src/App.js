@@ -133,8 +133,8 @@ function App() {
     
         // Make an API call to mark messages as read in the backend
         try {
-            const apiUrl = `http://134.0.118.29/api/messages/mark-as-read/${id}`;
-            await axios.put(apiUrl);
+            const apiUrl = `http://134.0.118.29/api/read_all/?=${id}`;
+            await axios.post(apiUrl);
     
             
         } catch (error) {

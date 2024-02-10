@@ -7,6 +7,16 @@ body,html{
   background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
 }
 
+.unread-messages-badge {
+  background-color: red; /* Цвет фона бейджа */
+  color: white; /* Цвет текста бейджа */
+  border-radius: 50%; /* Создание круглой формы бейджа */
+  padding: 5px 8px; /* Отступы внутри бейджа */
+  position: absolute; /* Позиционирование абсолютно относительно родительского элемента */
+  top: 0; /* Положение сверху */
+  right: 0; /* Положение справа */
+}
+
 .chat{
   margin-top: auto;
   margin-bottom: auto;
