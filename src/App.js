@@ -133,17 +133,9 @@ function App() {
     
         // Make an API call to mark messages as read in the backend
         try {
-            const csrfTokenFromCookie = document.cookie
-            .split('; ')
-            .find(cookie => cookie.startsWith('csrftoken='))
-            .split('=')[1];
 
             // Set the CSRF token in the axios headers
-            if (csrfTokenFromCookie) {
-            axios.defaults.headers.common['X-CSRFToken'] = csrfTokenFromCookie;
-            } else {
-            console.error('CSRF token not found in the Cookie header.');
-            }
+            axios.defaults.headers.common['X-CSRFToken'] = 'AI30dxro2AAoESxKDUg4Rz19WSiLmWdC';
             const apiUrl = `http://134.0.118.29/api/read_all/?tg_id=${id}`;
             await axios.post(apiUrl);
     
