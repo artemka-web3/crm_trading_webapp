@@ -31,7 +31,7 @@ function App() {
         if (users) {
             // Filter users based on the search term
             filtered = users.filter(user => (
-                (user.tg_id && user.tg_id.includes(term))
+                (user.tg_id.toString() == term.toString())
             ));
         }
         setFilteredUsers(filtered);
