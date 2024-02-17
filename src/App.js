@@ -31,7 +31,7 @@ function App() {
         if (users) {
             // Filter users based on the search term
             filtered = users.filter(user => (
-                (user.username && user.username.toLowerCase().includes(term.toLowerCase()))
+                (user.tg_id && user.tg_id.includes(term))
             ));
         }
         setFilteredUsers(filtered);
@@ -231,7 +231,7 @@ function App() {
                                         </div>
                                         <div className="user_info">
                                             <span>{user.first_name + ' ' + user.last_name}</span>
-                                            <p>{`@${user.username}`}</p>
+                                            <p>{`tg_id: ${user.tg_id}`}</p>
                                             <button onClick={(e) => chooseChat(e, user.tg_id)} className="btn-primary">Open Chat</button>
                                         </div>
                                     </div>
