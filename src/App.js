@@ -146,19 +146,33 @@ function App() {
         const getUsers = async () => {
             let usersarr = []
             const apiUrl = 'http://134.0.118.29/api/users/';
+            let filtered = [];
+            if (searchTerm != '') {
+                console.log(true, searchTerm)
+                // Filter users based on the search term
+                filtered = users.filter(user => (
+                    (user.tg_id.toString() == searchTerm.toString())
+                ));
+                setFilteredUsers(filtered);
+                return filtered
+            } else {
+                console.log(false, searchTerm)
 
-            try {
-                const response = await axios.get(apiUrl);
-                const sortedUsers = response.data;
-                usersarr = sortedUsers;
-                console.log('sortedUsers', sortedUsers)
-                setUsers(usersarr);
-                setFilteredUsers(usersarr);
-                return response.data;
-            } catch (error) {
-                console.error('Error:', error);
-                throw error;
+                setSearchTerm('')
+                try {
+                    const response = await axios.get(apiUrl);
+                    const sortedUsers = response.data;
+                    usersarr = sortedUsers;
+                    console.log('sortedUsers', sortedUsers)
+                    setUsers(usersarr);
+                    setFilteredUsers(usersarr);
+                    return response.data;
+                } catch (error) {
+                    console.error('Error:', error);
+                    throw error;
+                }
             }
+
         };
 
         const defaultChatMessages = async () => {
