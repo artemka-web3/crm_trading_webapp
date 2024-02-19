@@ -158,7 +158,6 @@ function App() {
             } else {
                 console.log(false, searchTerm)
 
-                setSearchTerm('')
                 try {
                     const response = await axios.get(apiUrl);
                     const sortedUsers = response.data;
