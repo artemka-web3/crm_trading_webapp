@@ -23,19 +23,18 @@ function App() {
     const [inputMsg, setInputMsg] = useState('')
 
 
-    const handleSearch = (e) => {
-        let term = e.target.value;
+    const handleSearch = (term) => {
         setSearchTerm(term);
-
-        let filtered = [];
-        if (users) {
-            // Filter users based on the search term
-            filtered = users.filter(user => (
-                (user.tg_id.toString() == term.toString())
-            ));
-        }
-        setFilteredUsers(filtered);
     };
+
+    const filterItems = (term) => {
+        const filteredItems = users.filter((item) =>
+            `${item.tg_id}` == term
+        );
+        setFilteredUsers(filteredItems);
+    };
+
+
 
     const [loading, setLoading] = useState(true);
 
@@ -145,32 +144,25 @@ function App() {
 
         const getUsers = async () => {
             let usersarr = []
-            const apiUrl = 'http://134.0.118.29/api/users/';
-            let filtered = [];
-            if (searchTerm != '') {
-                console.log(true, searchTerm)
-                // Filter users based on the search term
-                filtered = users.filter(user => (
-                    (user.tg_id.toString() == searchTerm.toString())
-                ));
-                setFilteredUsers(filtered);
-                return filtered
-            } else {
-                console.log(false, searchTerm)
 
-                try {
-                    const response = await axios.get(apiUrl);
-                    const sortedUsers = response.data;
-                    usersarr = sortedUsers;
-                    console.log('sortedUsers', sortedUsers)
-                    setUsers(usersarr);
-                    setFilteredUsers(usersarr);
-                    return response.data;
-                } catch (error) {
-                    console.error('Error:', error);
-                    throw error;
-                }
+            try {
+                console.log('finding', searchTerm)
+                let apiUrl = `http://134.0.118.29/api/user/${searchTerm}/`;
+                const response = await axios.get(apiUrl);
+                console.log("aAAAAAAAAAAAAA", response.data)
+                setFilteredUsers([response.data]);
+
+            } catch(error) {
+                let apiUrl = `http://134.0.118.29/api/users/`;
+                const response = await axios.get(apiUrl);
+                const sortedUsers = response.data;
+                usersarr = sortedUsers;
+                console.log('sortedUsers', sortedUsers)
+                setFilteredUsers(sortedUsers);
+                return response.data;
             }
+            
+
 
         };
 
@@ -203,6 +195,7 @@ function App() {
 
         const fetchData = async () => {
             await getUsers();
+
             await defaultChatMessages();
             await defaultUser();
 
@@ -216,7 +209,7 @@ function App() {
 
         // Clean up the interval on component unmount
         return () => clearInterval(intervalId);
-    }, [users, currentChatId, chats, chatMessages, curUser]);
+    }, [searchTerm]);
 
 
     return (
@@ -225,7 +218,7 @@ function App() {
                 <div className="col-md-4 col-xl-3 chat"><div className="card mb-sm-3 mb-md-0 contacts_card">
                     <div className="card-header">
                         <div className="input-group">
-                            <input value={searchTerm} onChange={handleSearch} type="text" placeholder="Search by tg username..." name="" className="form-control search" />
+                            <input value={searchTerm} onChange={(e) => handleSearch(e.target.value)} type="text" placeholder="Search by tg username..." name="" className="form-control search" />
                             <div className="input-group-prepend">
                                 <span className="input-group-text search_btn"><i className="fas fa-search"></i></span>
                             </div>
