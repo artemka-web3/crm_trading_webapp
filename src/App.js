@@ -14,6 +14,7 @@ function App() {
     const [filteredUsers, setFilteredUsers] = useState(users);
     const [curUser, setCurUser] = useState([])
     const [currentChatId, setCurrentChatId] = useState(0)
+    const [searchedUsers, setSearchedUsers] = useState([]);
 
     const [image, setImage] = useState('')
     const [first, setFirst] = useState('')
@@ -23,15 +24,23 @@ function App() {
     const [inputMsg, setInputMsg] = useState('')
 
 
-    const handleSearch = (term) => {
+    const handleSearch = async (term) => {
         setSearchTerm(term);
+        try {
+            let apiUrl = `http://134.0.118.29/api/user/${searchTerm}/`;
+            const response = await axios.get(apiUrl);
+            console.log("aAAAAAAAAAAAAA", response.data)
+            setSearchedUsers([response.data]);   
+        } catch(err){
+            setSearchedUsers([]);
+        }
+
+        
     };
 
-    const filterItems = (term) => {
-        const filteredItems = users.filter((item) =>
-            `${item.tg_id}` == term
-        );
-        setFilteredUsers(filteredItems);
+    const filterItems = async () => {
+
+
     };
 
 
@@ -144,24 +153,30 @@ function App() {
 
         const getUsers = async () => {
             let usersarr = []
+            let apiUrl = `http://134.0.118.29/api/users/`;
+            const response = await axios.get(apiUrl);
+            const sortedUsers = response.data;
+            usersarr = sortedUsers;
+            console.log('sortedUsers', sortedUsers)
+            setFilteredUsers(sortedUsers);
+            return response.data;
+            // try {
+            //     console.log('finding', searchTerm)
+            //     let apiUrl = `http://134.0.118.29/api/user/${searchTerm}/`;
+            //     const response = await axios.get(apiUrl);
+            //     console.log("aAAAAAAAAAAAAA", response.data)
+            //     setFilteredUsers([response.data]);
 
-            try {
-                console.log('finding', searchTerm)
-                let apiUrl = `http://134.0.118.29/api/user/${searchTerm}/`;
-                const response = await axios.get(apiUrl);
-                console.log("aAAAAAAAAAAAAA", response.data)
-                setFilteredUsers([response.data]);
+            // } catch(error) {
+            //     let apiUrl = `http://134.0.118.29/api/users/`;
+            //     const response = await axios.get(apiUrl);
+            //     const sortedUsers = response.data;
+            //     usersarr = sortedUsers;
+            //     console.log('sortedUsers', sortedUsers)
+            //     setFilteredUsers(sortedUsers);
+            //     return response.data;
+            // }
 
-            } catch(error) {
-                let apiUrl = `http://134.0.118.29/api/users/`;
-                const response = await axios.get(apiUrl);
-                const sortedUsers = response.data;
-                usersarr = sortedUsers;
-                console.log('sortedUsers', sortedUsers)
-                setFilteredUsers(sortedUsers);
-                return response.data;
-            }
-            
 
 
         };
@@ -200,16 +215,15 @@ function App() {
             await defaultUser();
 
         };
-
         // Cleanup function to clear the interval when the component unmounts
         const intervalId = setInterval(() => {
             fetchData();
 
         }, 3000);
-
-        // Clean up the interval on component unmount
+        console.log("searchedUsers", searchedUsers)
+        // // Clean up the interval on component unmount
         return () => clearInterval(intervalId);
-    }, [searchTerm]);
+    }, [filteredUsers, chatMessages, first, last, image, uname, curUser, currentChatId, searchTerm, searchedUsers]);
 
 
     return (
@@ -226,23 +240,48 @@ function App() {
                     </div>
                     <div className="card-body contacts_body">
                         <ui className="contacts">
-                            {filteredUsers.map(user => (
-                                <li key={user.tg_id} className="active">
-                                    <div className="d-flex bd-highlight">
-                                        <div className="img_cont">
-                                            <img className="rounded-circle" height="75px" width="75px" src={`${user.image}`} />
-                                            {parseInt(user.unread_messages_count) > 0 && (
-                                                <div className="unread-messages-badge">{user.unread_messages_count}</div>
-                                            )}
-                                        </div>
-                                        <div className="user_info">
-                                            <span>{user.first_name + ' ' + user.last_name}</span>
-                                            <p>{`tg_id: ${user.tg_id}`}</p>
-                                            <button onClick={(e) => chooseChat(e, user.tg_id)} className="btn-primary">Open Chat</button>
-                                        </div>
-                                    </div>
-                                </li>
-                            ))}
+                            {searchedUsers.length == 0 || searchTerm == '' ? (
+                                <div>
+                                    {filteredUsers.map(user => (
+                                        <li key={user.tg_id} className="active">
+                                            <div className="d-flex bd-highlight">
+                                                <div className="img_cont">
+                                                    <img className="rounded-circle" height="75px" width="75px" src={`${user.image}`} />
+                                                    {parseInt(user.unread_messages_count) > 0 && (
+                                                        <div className="unread-messages-badge">{user.unread_messages_count}</div>
+                                                    )}
+                                                </div>
+                                                <div className="user_info">
+                                                    <span>{user.first_name + ' ' + user.last_name}</span>
+                                                    <p>{`tg_id: ${user.tg_id}`}</p>
+                                                    <button onClick={(e) => chooseChat(e, user.tg_id)} className="btn-primary">Open Chat</button>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div>
+                                    {searchedUsers.map(user => (
+                                        <li key={user.tg_id} className="active">
+                                            <div className="d-flex bd-highlight">
+                                                <div className="img_cont">
+                                                    <img className="rounded-circle" height="75px" width="75px" src={`${user.image}`} />
+                                                    {parseInt(user.unread_messages_count) > 0 && (
+                                                        <div className="unread-messages-badge">{user.unread_messages_count}</div>
+                                                    )}
+                                                </div>
+                                                <div className="user_info">
+                                                    <span>{user.first_name + ' ' + user.last_name}</span>
+                                                    <p>{`tg_id: ${user.tg_id}`}</p>
+                                                    <button onClick={(e) => chooseChat(e, user.tg_id)} className="btn-primary">Open Chat</button>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </div>
+                            )}
+
 
 
                         </ui>
@@ -269,6 +308,7 @@ function App() {
                                 </div>
                             </div>
                         </div>
+
                         <div className="card-body msg_card_body">
                             {chatMessages.map(message => (
                                 <div key={message.id} className={message.message_sender == "user" ? "d-flex justify-content-start mb-4" : "d-flex justify-content-end mb-4"}>
